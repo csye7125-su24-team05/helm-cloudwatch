@@ -1,0 +1,26 @@
+pipeline {
+  agent { 
+    docker { 
+      image 'alpine/helm:3.15.1' 
+      args '--entrypoint=\'\''
+    } 
+  }
+  stages {
+    stage('helm lint') {
+      steps {
+        sh 'helm lint ./'
+      }
+    }
+
+    stage('helm template') {
+      steps {
+        sh 'helm template ./'
+      }
+    }
+  }
+  post {
+    always {
+      cleanWs()
+    }
+  }
+}

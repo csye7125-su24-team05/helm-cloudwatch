@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "eks-cve-cloudwatch.fullname" . }}-test-connection"
+  labels:
+    {{- include "eks-cve-cloudwatch.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "eks-cve-cloudwatch.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

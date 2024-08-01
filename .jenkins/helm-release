@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Release') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN')]) {
+                    script {
+                        sh 'npx semantic-release'
+                    }
+                }
+            }
+        }
+
+    }
+    post {
+        always {
+            // Cleanup
+            sh 'cat ./Chart.yaml | grep version'
+            cleanWs()
+        }
+    }
+}

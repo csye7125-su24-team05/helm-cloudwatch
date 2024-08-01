@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-cluster-info
+  namespace: amazon-cloudwatch
+data:
+  cluster.name: {{ .Values.clusterName }}
+  http.server: {{ if .Values.fluentBitHttpPort }}On{{ else }}Off{{ end }}
+  http.port: {{ .Values.fluentBitHttpPort | default "2020" }}
+  read.head: {{ .Values.fluentBitReadFromHead }}
+  read.tail: {{ if eq .Values.fluentBitReadFromHead "On" }}Off{{ else }}On{{ end }}
+  logs.region: {{ .Values.regionName }}

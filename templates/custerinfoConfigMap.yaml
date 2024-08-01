@@ -4,9 +4,17 @@ metadata:
   name: fluent-bit-cluster-info
   namespace: amazon-cloudwatch
 data:
-  cluster.name: {{ .Values.clusterName }}
-  http.server: {{ if .Values.fluentBitHttpPort }}On{{ else }}Off{{ end }}
-  http.port: {{ .Values.fluentBitHttpPort | default "2020" }}
-  read.head: {{ .Values.fluentBitReadFromHead }}
-  read.tail: {{ if eq .Values.fluentBitReadFromHead "On" }}Off{{ else }}On{{ end }}
-  logs.region: {{ .Values.regionName }}
+  cluster.name: {{ .Values.clusterName | quote }}
+  {{ if .Values.fluentBitHttpPort }}
+  http.server: "On"
+  {{ else }}
+  http.server: "Off"
+  {{ end }}
+  http.port: {{ .Values.fluentBitHttpPort | default 2020 | quote }}
+  read.head: {{ .Values.fluentBitReadFromHead | quote }}
+  {{ if eq .Values.fluentBitReadFromHead "On" }}
+  read.tail: "Off"
+  {{ else }}
+  read.tail: "On"
+  {{ end }}
+  logs.region: {{ .Values.regionName | quote }}
